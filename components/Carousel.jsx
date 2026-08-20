@@ -15,7 +15,12 @@ import { createMeta } from "./ring/meta";
 import { createSplitText } from "./ring/splitText";
 import { createTag, TAG_W, TAG_H } from "./ring/tag";
 import { defaultParams } from "./ring/params";
-import { IMAGE_FILES, PROJECTS } from "./ring/projects";
+import {
+  IMAGE_FILES,
+  NAV_PROJECTS,
+  NAV_TO_CELL,
+  CELL_TO_NAV,
+} from "./ring/projects";
 import {
   TAU,
   HALF_PI,
@@ -41,6 +46,7 @@ export default function Carousel() {
   const containerRef = useRef(null);
   const listRef = useRef(null);
   const itemsRef = useRef([]);
+  const pickProjectRef = useRef(null);
   const loaderRef = useRef(null);
   const liveRef = useRef(null);
   const cutRef = useRef(null);
@@ -304,6 +310,17 @@ export default function Carousel() {
     // above is suspended entirely, so the two cannot both drive spin.
     let picking = false;
 
+    // Art is dealt by ring slot, not plane index — see the identical mapping
+    // built fresh each frame in layout(). Shared here so the nav column can
+    // invert it: given a project's index, which plane is currently wearing
+    // it.
+    const cellOf = (slot) => {
+      const imgOff = Math.round(params.imageOffset);
+      return imageCount > 0
+        ? (((imgOff - slot) % imageCount) + imageCount) % imageCount
+        : 0;
+    };
+
     let pointerTravel = 0; // tells a click from a drag
     let travelX = 0;
     let travelY = 0;
@@ -351,6 +368,20 @@ export default function Carousel() {
         },
       });
     };
+
+    // Nav column -> ring. `p` is a project's index into PROJECTS/IMAGE_FILES;
+    // find whichever plane is currently wearing that cell and turn to it.
+    const pickProject = (p) => {
+      if (!interactive) return;
+      const count = Math.round(params.count);
+      for (let i = 0; i < count; i++) {
+        if (cellOf(signedOffset(i)) === p) {
+          pick(i);
+          return;
+        }
+      }
+    };
+    pickProjectRef.current = pickProject;
 
     /* ------------------------------------------------------------ pointer */
     // World px, origin at screen centre, Y up — the space the shader works in,
@@ -584,10 +615,13 @@ export default function Carousel() {
 
     const paintList = () => {
       const items = itemsRef.current;
+      // shown is a PROJECTS index (a card); the list is de-duplicated, so
+      // resolve it to whichever nav row that card belongs to before painting.
+      const navShown = CELL_TO_NAV[shown] ?? -1;
       for (let i = 0; i < items.length; i++) {
         const el = items[i];
         if (!el) continue;
-        const on = i === shown;
+        const on = i === navShown;
         el.style.opacity = on ? "1" : "0.2";
         if (on) el.setAttribute("aria-current", "true");
         else el.removeAttribute("aria-current");
@@ -684,16 +718,6 @@ export default function Carousel() {
       let frontI = -1;
       let frontD = 1e9;
       let frontCell = 0;
-
-      // Art is dealt by ring slot, not plane index. Planes are numbered in fan
-      // order, so dealing by index puts every other project side by side and
-      // steps the column two names per slot. Negated because turning the ring
-      // forward walks the front slot backwards.
-      const imgOff = Math.round(params.imageOffset);
-      const cellOf = (slot) =>
-        imageCount > 0
-          ? (((imgOff - slot) % imageCount) + imageCount) % imageCount
-          : 0;
 
       // Which card the cursor is on. Independent of the hover falloff above:
       // turning the goo off should not take the tag with it.
@@ -1271,6 +1295,7 @@ export default function Carousel() {
 
     return () => {
       disposed = true;
+      pickProjectRef.current = null;
       clearTimeout(holdTimer);
       clearTimeout(fontFallback);
       renderer.setAnimationLoop(null);
@@ -1316,10 +1341,11 @@ export default function Carousel() {
           is the carousel. */}
       <div ref={containerRef} className="fixed inset-0 touch-none" />
 
-      {/* Never takes the pointer: the canvas underneath handles the wheel and
-          the drag, and the column has no business interrupting a throw that
-          happens to pass under it. Sized from styleMeta, not a class, so it
-          takes the narrow bump with every other label. */}
+      {/* The column itself stays out of the canvas's way — the underlying
+          element still handles the wheel and the drag. Each name opts back
+          in to the pointer individually, since only its own small box needs
+          to be clickable, not the whole right margin. Sized from styleMeta,
+          not a class, so it takes the narrow bump with every other label. */}
       <ul
         ref={listRef}
         aria-label="Projects"
@@ -1328,15 +1354,26 @@ export default function Carousel() {
         }}
         className="pointer-events-none fixed right-[12vw] top-[2.4vh] z-10 flex flex-col items-start text-right leading-[1.4] tracking-[0.01em] text-[#0a0a0a] opacity-0 max-sm:hidden"
       >
-        {PROJECTS.map((p, i) => (
+        {NAV_PROJECTS.map((p, navI) => (
           <li
-            key={p.file}
+            key={navI}
             ref={(el) => {
-              itemsRef.current[i] = el;
+              itemsRef.current[navI] = el;
+            }}
+            role="button"
+            tabIndex={0}
+            // NAV_TO_CELL resolves this row back to the card wearing it, in
+            // case that project's cell was repeated to pad the ring out.
+            onClick={() => pickProjectRef.current?.(NAV_TO_CELL[navI])}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                pickProjectRef.current?.(NAV_TO_CELL[navI]);
+              }
             }}
             // No transition, deliberately: the colour turns over the moment
             // the ring passes the halfway point between two slots.
-            style={{ opacity: 0.2 }}
+            style={{ opacity: 0.2, cursor: "pointer", pointerEvents: "auto" }}
           >
             {p.name}
           </li>

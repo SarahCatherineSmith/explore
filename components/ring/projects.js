@@ -6,24 +6,48 @@
 // TODO: every `type` and `year` is placeholder. Names marked (*) are guesses
 // at the subject — the artwork carries no wordmark to read them off.
 export const PROJECTS = [
-  { file: "10.webp", name: "Matchday", type: "Motion", year: "2025" }, // *
-  { file: "12.webp", name: "Nightshift", type: "Art Direction", year: "2023" }, // *
-  { file: "14.webp", name: "Volt", type: "Branding", year: "2024" }, // *
-  { file: "16.webp", name: "Keycard", type: "Product Design", year: "2026" }, // *
-  { file: "18.webp", name: "None", type: "Photography", year: "2026" },
-  { file: "2.webp", name: "Prestige Equine", type: "Web Design", year: "2025" },
-  { file: "4.webp", name: "Blue Room", type: "Identity", year: "2023" }, // *
-  { file: "6.webp", name: "Steininvest", type: "Web Design", year: "2024" },
-  { file: "8.webp", name: "CENE+", type: "Branding", year: "2026" },
-  { file: "9.webp", name: "Snuff", type: "Editorial", year: "2024" },
-  { file: "7.webp", name: "Iris", type: "Photography", year: "2023" }, // *
-  { file: "5.webp", name: "Sevenworlds", type: "Development", year: "2025" },
-  { file: "3.webp", name: "Irse a Volver", type: "Art Direction", year: "2024" },
-  { file: "1.webp", name: "PM24", type: "Branding", year: "2024" },
-  { file: "17.webp", name: "Favor", type: "E-commerce", year: "2025" },
-  { file: "15.webp", name: "Freshweb", type: "Web Design", year: "2025" },
-  { file: "13.webp", name: "Proba", type: "Development", year: "2026" },
-  { file: "11.webp", name: "MVN", type: "Identity", year: "2025" },
+  { file: "10.webp", name: "Agentic Email", type: "Motion", year: "2025" },
+  { file: "12.webp", name: "SMS Campaigns", type: "Art Direction", year: "2023" },
+  { file: "14.webp", name: "AI Education", type: "Branding", year: "2024" },
+  { file: "16.webp", name: "SQSP Courses", type: "Product Design", year: "2026" },
+  { file: "18.webp", name: "System of Landings", type: "Photography", year: "2026" },
+  { file: "2.webp", name: "App Ecosystem", type: "Web Design", year: "2025" },
+  { file: "4.webp", name: "Vertical Toolkit", type: "Identity", year: "2023" },
+  { file: "6.webp", name: "Multilingual", type: "Web Design", year: "2024" },
+  { file: "8.webp", name: "The Washington Post", type: "Branding", year: "2026" },
+  { file: "9.webp", name: "Data Engineering", type: "Editorial", year: "2024" },
+  { file: "7.webp", name: "About", type: "Photography", year: "2023" },
+
+  // Only 11 real projects — these seven repeat the set above (same file,
+  // name, type and year as their match) purely to keep the ring at 18 cards
+  // and hold the spacing/gap that count was tuned for. Swap in real work
+  // here whenever there is more of it; nothing else needs touching.
+  { file: "10.webp", name: "Agentic Email", type: "Motion", year: "2025" },
+  { file: "12.webp", name: "SMS Campaigns", type: "Art Direction", year: "2023" },
+  { file: "14.webp", name: "AI Education", type: "Branding", year: "2024" },
+  { file: "16.webp", name: "SQSP Courses", type: "Product Design", year: "2026" },
+  { file: "18.webp", name: "System of Landings", type: "Photography", year: "2026" },
+  { file: "2.webp", name: "App Ecosystem", type: "Web Design", year: "2025" },
+  { file: "4.webp", name: "Vertical Toolkit", type: "Identity", year: "2023" },
 ];
 
 export const IMAGE_FILES = PROJECTS.map((p) => p.file);
+
+// The ring can carry more cards than there are unique projects (see the
+// repeats above) purely to hold its tuned spacing. The nav column shouldn't
+// list the same name twice, so it walks PROJECTS once and keeps only the
+// first sighting of each file — while these two maps keep it able to talk to
+// the ring, which still addresses cards by their full PROJECTS index.
+//
+//   NAV_PROJECTS[navIndex]        -> { file, name, type, year }
+//   NAV_TO_CELL[navIndex]         -> that project's first PROJECTS index
+//   CELL_TO_NAV[projectsIndex]    -> which nav row a given card belongs to
+export const NAV_PROJECTS = [];
+export const NAV_TO_CELL = [];
+export const CELL_TO_NAV = PROJECTS.map((p, cell) => {
+  const seen = NAV_PROJECTS.findIndex((n) => n.file === p.file);
+  if (seen !== -1) return seen;
+  NAV_PROJECTS.push(p);
+  NAV_TO_CELL.push(cell);
+  return NAV_PROJECTS.length - 1;
+});
