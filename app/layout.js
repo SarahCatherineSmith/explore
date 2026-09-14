@@ -6,10 +6,13 @@ export const metadata = {
     "A portfolio carousel rendered as a single WebGL shader. Cards ride a ring and stretch into threads as they pull apart.",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, modal }) {
   return (
     <html lang="en">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        {modal}
+      </body>
     </html>
   );
 }

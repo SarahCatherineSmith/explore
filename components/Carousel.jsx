@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import gsap from "gsap";
 
@@ -17,9 +18,11 @@ import { createTag, TAG_W, TAG_H } from "./ring/tag";
 import { defaultParams } from "./ring/params";
 import {
   IMAGE_FILES,
+  PROJECTS,
   NAV_PROJECTS,
   NAV_TO_CELL,
   CELL_TO_NAV,
+  slugify,
 } from "./ring/projects";
 import {
   TAU,
@@ -43,6 +46,16 @@ const blankTexture = () => {
 };
 
 export default function Carousel() {
+  const router = useRouter();
+  // Mirrored into a ref rather than read directly: the render-loop effect
+  // below is built once (see its own comment) and captures whatever was in
+  // scope on that mount, so it needs a stable handle it can read fresh
+  // values through rather than the `router` binding itself.
+  const routerRef = useRef(router);
+  useEffect(() => {
+    routerRef.current = router;
+  }, [router]);
+
   const containerRef = useRef(null);
   const listRef = useRef(null);
   const itemsRef = useRef([]);
@@ -350,8 +363,11 @@ export default function Carousel() {
       const target = base + Math.round((state.spin - base) / TAU) * TAU;
 
       const slots = Math.abs(target - state.spin) / slot;
-      // Already there. Opening the project belongs here eventually.
-      if (slots < 0.01) return;
+      // Already there. Returning false rather than nothing lets a caller
+      // tell "just turned" apart from "was already facing front" — this is
+      // a run-in for a throw that's nearly spent, so it has nothing to do
+      // once there's no distance left to close.
+      if (slots < 0.01) return false;
 
       spinVel = 0;
       settling = false;
@@ -367,16 +383,27 @@ export default function Carousel() {
           picking = false;
         },
       });
+      return true;
+    };
+
+    // What a click on the card already facing front does: open its page.
+    // `cell` is a PROJECTS index, not a plane index — the same one cellOf
+    // hands the shader.
+    const openProject = (cell) => {
+      const project = PROJECTS[cell];
+      if (!project) return;
+      routerRef.current.push(`/projects/${slugify(project.name)}`);
     };
 
     // Nav column -> ring. `p` is a project's index into PROJECTS/IMAGE_FILES;
-    // find whichever plane is currently wearing that cell and turn to it.
+    // find whichever plane is currently wearing that cell, turn to it, and
+    // if it's already there, that's the click going to the project instead.
     const pickProject = (p) => {
       if (!interactive) return;
       const count = Math.round(params.count);
       for (let i = 0; i < count; i++) {
         if (cellOf(signedOffset(i)) === p) {
-          pick(i);
+          if (!pick(i)) openProject(p);
           return;
         }
       }
@@ -507,10 +534,12 @@ export default function Carousel() {
 
     // A drag ends in a click too, so only a near-stationary press counts.
     // `over` comes from the same hit test that decides the tag, so a click
-    // only ever lands on the card the tag was offering.
+    // only ever lands on the card the tag was offering. If that card was
+    // already facing front, pick() has nothing to turn — that's the "View"
+    // tag's promise, so open the project instead.
     const onClick = () => {
       if (!interactive || pointerTravel >= 5 || over < 0) return;
-      pick(over);
+      if (!pick(over)) openProject(cellOf(signedOffset(over)));
     };
 
     container.addEventListener("wheel", onWheel, { passive: false });

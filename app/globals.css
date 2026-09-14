@@ -52,3 +52,34 @@ body {
 canvas {
   display: block;
 }
+
+/* The project modal (components/ProjectModal.jsx): grows in from slightly
+   below its resting size/position rather than just cross-fading, so opening
+   one reads as the card enlarging into the overlay instead of a page swap. */
+.modal-backdrop {
+  animation: modal-backdrop-in 0.32s ease-out both;
+}
+
+.modal-panel {
+  animation: modal-panel-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-panel-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-panel {
+    animation: none;
+  }
+}

@@ -33,6 +33,17 @@ export const PROJECTS = [
 
 export const IMAGE_FILES = PROJECTS.map((p) => p.file);
 
+// Turns a project's name into the slug its detail page lives at
+// (/projects/[slug]). Derived on demand rather than stored per row: name is
+// the single source of truth, so two rows sharing a name — the repeats above
+// — resolve to the same slug and the same page, which is what you want when
+// a project is standing in for itself twice around the ring.
+export const slugify = (name) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 // The ring can carry more cards than there are unique projects (see the
 // repeats above) purely to hold its tuned spacing. The nav column shouldn't
 // list the same name twice, so it walks PROJECTS once and keeps only the
