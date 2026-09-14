@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
   if (!project) return {};
   return {
     title: `${project.name} — Viscose`,
-    description: `${project.type}, ${project.year}.`,
+    description: project.description ?? `${project.type}, ${project.year}.`,
   };
 }
 
@@ -37,7 +37,7 @@ export default async function ProjectPage({ params }) {
     <>
       <ScrollUnlock />
       <main className="min-h-screen bg-[#fafafa] text-[#0a0a0a]">
-        <div className="mx-auto max-w-5xl px-6 py-10 sm:px-10">
+        <div className="mx-auto max-w-6xl px-6 py-10 sm:px-10">
           <Link
             href="/"
             className="inline-block text-sm tracking-[0.01em] opacity-60 transition-opacity hover:opacity-100"

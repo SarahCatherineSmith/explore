@@ -3,32 +3,160 @@
 // carousel turns. Reordering these rows moves the ring, the column and the
 // numbering together; nothing else needs touching.
 //
-// TODO: every `type` and `year` is placeholder. Names marked (*) are guesses
-// at the subject — the artwork carries no wordmark to read them off.
+// TODO: every `type`, `year` and `description` is placeholder. Names marked
+// (*) are guesses at the subject — the artwork carries no wordmark to read
+// them off.
 export const PROJECTS = [
-  { file: "10.webp", name: "Agentic Email", type: "Motion", year: "2025" },
-  { file: "12.webp", name: "SMS Campaigns", type: "Art Direction", year: "2023" },
-  { file: "14.webp", name: "AI Education", type: "Branding", year: "2024" },
-  { file: "16.webp", name: "SQSP Courses", type: "Product Design", year: "2026" },
-  { file: "18.webp", name: "System of Landings", type: "Photography", year: "2026" },
-  { file: "2.webp", name: "App Ecosystem", type: "Web Design", year: "2025" },
-  { file: "4.webp", name: "Vertical Toolkit", type: "Identity", year: "2023" },
-  { file: "6.webp", name: "Multilingual", type: "Web Design", year: "2024" },
-  { file: "8.webp", name: "The Washington Post", type: "Branding", year: "2026" },
-  { file: "9.webp", name: "Data Engineering", type: "Editorial", year: "2024" },
-  { file: "7.webp", name: "About", type: "Photography", year: "2023" },
+  {
+    file: "10.webp",
+    name: "Agentic Email",
+    type: "Motion",
+    year: "2025",
+    description:
+      "An autonomous agent that drafts, personalises and sends email campaigns end to end, learning from opens and clicks with every run.",
+  },
+  {
+    file: "12.webp",
+    name: "SMS Campaigns",
+    type: "Art Direction",
+    year: "2023",
+    description:
+      "A visual system for SMS campaigns built to read clearly at a glance, from a single line of copy to a full seasonal push.",
+  },
+  {
+    file: "14.webp",
+    name: "AI Education",
+    type: "Branding",
+    year: "2024",
+    description:
+      "Brand identity for an AI-first education platform, built to feel approachable rather than technical.",
+  },
+  {
+    file: "16.webp",
+    name: "SQSP Courses",
+    type: "Product Design",
+    year: "2026",
+    description:
+      "Product design for a course-building tool inside Squarespace, from outline to publish in one flow.",
+  },
+  {
+    file: "18.webp",
+    name: "System of Landings",
+    type: "Photography",
+    year: "2026",
+    description:
+      "A modular system of landing pages designed to launch fast without losing a consistent voice.",
+  },
+  {
+    file: "2.webp",
+    name: "App Ecosystem",
+    type: "Web Design",
+    year: "2025",
+    description:
+      "Web design for a marketplace of apps and integrations, structured to make discovery effortless across hundreds of listings.",
+  },
+  {
+    file: "4.webp",
+    name: "Vertical Toolkit",
+    type: "Identity",
+    year: "2023",
+    description:
+      "An identity system for a toolkit built to flex across a dozen different verticals without losing its throughline.",
+  },
+  {
+    file: "6.webp",
+    name: "Multilingual",
+    type: "Web Design",
+    year: "2024",
+    description:
+      "A multilingual web experience designed so no language feels like an afterthought.",
+  },
+  {
+    file: "8.webp",
+    name: "The Washington Post",
+    type: "Branding",
+    year: "2026",
+    description:
+      "Brand work for a fast-moving newsroom, balancing authority with the pace of daily publishing.",
+  },
+  {
+    file: "9.webp",
+    name: "Data Engineering",
+    type: "Editorial",
+    year: "2024",
+    description:
+      "An editorial approach to explaining a data platform's pipeline, one stage at a time.",
+  },
+  {
+    file: "7.webp",
+    name: "About",
+    type: "Photography",
+    year: "2023",
+    description:
+      "A photographic \"about\" page built to say more with a face and a few lines than with a paragraph.",
+  },
 
   // Only 11 real projects — these seven repeat the set above (same file,
-  // name, type and year as their match) purely to keep the ring at 18 cards
-  // and hold the spacing/gap that count was tuned for. Swap in real work
-  // here whenever there is more of it; nothing else needs touching.
-  { file: "10.webp", name: "Agentic Email", type: "Motion", year: "2025" },
-  { file: "12.webp", name: "SMS Campaigns", type: "Art Direction", year: "2023" },
-  { file: "14.webp", name: "AI Education", type: "Branding", year: "2024" },
-  { file: "16.webp", name: "SQSP Courses", type: "Product Design", year: "2026" },
-  { file: "18.webp", name: "System of Landings", type: "Photography", year: "2026" },
-  { file: "2.webp", name: "App Ecosystem", type: "Web Design", year: "2025" },
-  { file: "4.webp", name: "Vertical Toolkit", type: "Identity", year: "2023" },
+  // name, type, year and description as their match) purely to keep the
+  // ring at 18 cards and hold the spacing/gap that count was tuned for.
+  // Swap in real work here whenever there is more of it; nothing else needs
+  // touching.
+  {
+    file: "10.webp",
+    name: "Agentic Email",
+    type: "Motion",
+    year: "2025",
+    description:
+      "An autonomous agent that drafts, personalises and sends email campaigns end to end, learning from opens and clicks with every run.",
+  },
+  {
+    file: "12.webp",
+    name: "SMS Campaigns",
+    type: "Art Direction",
+    year: "2023",
+    description:
+      "A visual system for SMS campaigns built to read clearly at a glance, from a single line of copy to a full seasonal push.",
+  },
+  {
+    file: "14.webp",
+    name: "AI Education",
+    type: "Branding",
+    year: "2024",
+    description:
+      "Brand identity for an AI-first education platform, built to feel approachable rather than technical.",
+  },
+  {
+    file: "16.webp",
+    name: "SQSP Courses",
+    type: "Product Design",
+    year: "2026",
+    description:
+      "Product design for a course-building tool inside Squarespace, from outline to publish in one flow.",
+  },
+  {
+    file: "18.webp",
+    name: "System of Landings",
+    type: "Photography",
+    year: "2026",
+    description:
+      "A modular system of landing pages designed to launch fast without losing a consistent voice.",
+  },
+  {
+    file: "2.webp",
+    name: "App Ecosystem",
+    type: "Web Design",
+    year: "2025",
+    description:
+      "Web design for a marketplace of apps and integrations, structured to make discovery effortless across hundreds of listings.",
+  },
+  {
+    file: "4.webp",
+    name: "Vertical Toolkit",
+    type: "Identity",
+    year: "2023",
+    description:
+      "An identity system for a toolkit built to flex across a dozen different verticals without losing its throughline.",
+  },
 ];
 
 export const IMAGE_FILES = PROJECTS.map((p) => p.file);

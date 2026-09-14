@@ -34,12 +34,12 @@ export default function ProjectModal({ children }) {
         onClick={close}
         className="modal-backdrop absolute inset-0 bg-[#0a0a0a]/50 backdrop-blur-sm"
       />
-      <div className="modal-panel relative max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-[#fafafa] p-6 shadow-2xl sm:p-10">
+      <div className="modal-panel relative max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-xl bg-[#fafafa] p-6 shadow-2xl sm:p-10">
         <button
           type="button"
           aria-label="Close"
           onClick={close}
-          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full text-xl leading-none text-[#0a0a0a] opacity-60 transition-opacity hover:opacity-100 sm:right-6 sm:top-6"
+          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[#0a0a0a] text-base leading-none text-[#fafafa] opacity-90 transition-opacity hover:opacity-100 sm:right-6 sm:top-6"
         >
           ×
         </button>
