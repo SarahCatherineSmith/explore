@@ -53,21 +53,16 @@ canvas {
   display: block;
 }
 
-/* The project modal (components/ProjectModal.jsx): grows in from slightly
-   below its resting size/position rather than just cross-fading, so opening
-   one reads as the card enlarging into the overlay instead of a page swap. */
-.modal-backdrop {
-  animation: modal-backdrop-in 0.32s ease-out both;
-}
-
+/* The project modal (components/ProjectModal.jsx): the panel grows in from
+   slightly below its resting size/position rather than just cross-fading, so
+   opening one reads as the card enlarging into the overlay instead of a page
+   swap. The scrim itself is deliberately NOT animated — a fading overlay is
+   the one thing that reads as "the background flashing" the moment its
+   timing is ever a frame off (a Prev/Next move, a re-render, anything other
+   than the very first open it was tuned for). It just appears at its
+   resting opacity immediately; only the panel gets the flourish. */
 .modal-panel {
   animation: modal-panel-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes modal-backdrop-in {
-  from {
-    opacity: 0;
-  }
 }
 
 @keyframes modal-panel-in {
@@ -78,7 +73,6 @@ canvas {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .modal-backdrop,
   .modal-panel {
     animation: none;
   }

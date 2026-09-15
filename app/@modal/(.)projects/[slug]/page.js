@@ -19,15 +19,23 @@ export default async function InterceptedProjectPage({ params }) {
   const count = NAV_PROJECTS.length;
   const prev = NAV_PROJECTS[(index - 1 + count) % count];
   const next = NAV_PROJECTS[(index + 1) % count];
+  const prevHref = `/projects/${slugify(prev.name)}`;
+  const nextHref = `/projects/${slugify(next.name)}`;
 
   return (
-    <ProjectModal>
+    <ProjectModal
+      prevHref={prevHref}
+      prevName={prev.name}
+      nextHref={nextHref}
+      nextName={next.name}
+    >
       <ProjectDetails
         project={project}
-        prevHref={`/projects/${slugify(prev.name)}`}
+        prevHref={prevHref}
         prevName={prev.name}
-        nextHref={`/projects/${slugify(next.name)}`}
+        nextHref={nextHref}
         nextName={next.name}
+        variant="modal"
       />
     </ProjectModal>
   );
